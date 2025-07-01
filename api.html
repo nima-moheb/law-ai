@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>API Handler</title>
+</head>
+<body>
+    <script>
+        async function getAIResponse(query) {
+            const apiKey = "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";  
+            const response = await fetch("https://api-inference.huggingface.co/models/persiannlp/PersianMind-v1.0", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${apiKey}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    inputs: `You are a professional lawyer specialized in Iranian law. Provide accurate legal advice in Persian. If unsure, say so clearly. User query: ${query}`
+                })
+            });
+            const data = await response.json();
+            const aiResponse = data[0].generated_text;
+            window.location.href = `ai-response:${aiResponse}`;
+        }
+        // Get the query from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('query');
+        if (query) {
+            getAIResponse(query);
+        }
+    </script>
+</body>
+</html>
